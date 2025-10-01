@@ -795,6 +795,197 @@
             color: #92400e;
         }
 
+        /* Template Selection Styles */
+        .template-selection {
+            margin-bottom: 2rem;
+        }
+
+        .template-section-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #667eea;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 1rem;
+        }
+
+        .template-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .template-card {
+            padding: 1rem;
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .template-card:hover {
+            background: #edf2f7;
+            border-color: #667eea;
+            transform: translateX(4px);
+        }
+
+        .template-card.selected {
+            background: linear-gradient(135deg, #667eea10 0%, #764ba210 100%);
+            border-color: #667eea;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.15);
+        }
+
+        .template-card.selected::after {
+            content: '✓';
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            width: 24px;
+            height: 24px;
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
+
+        .template-title {
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 0.4rem;
+            font-size: 1rem;
+        }
+
+        .template-description {
+            font-size: 0.85rem;
+            color: #718096;
+            line-height: 1.5;
+        }
+
+        .template-example {
+            margin-top: 0.6rem;
+            padding: 0.6rem;
+            background: white;
+            border-left: 3px solid #667eea;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            color: #4a5568;
+            font-style: italic;
+        }
+
+        .custom-template-link {
+            display: inline-block;
+            margin-top: 0.5rem;
+            color: #667eea;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .custom-template-link:hover {
+            color: #764ba2;
+        }
+
+        .form-container {
+            display: none;
+        }
+
+        .form-container.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        /* File Upload Styles */
+        .file-upload-area {
+            border: 2px dashed #cbd5e0;
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+            background: #f7fafc;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 1rem;
+        }
+
+        .file-upload-area:hover {
+            border-color: #667eea;
+            background: #edf2f7;
+        }
+
+        .file-upload-area.dragover {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #667eea10 0%, #764ba210 100%);
+        }
+
+        .file-upload-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .file-upload-text {
+            color: #4a5568;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .file-upload-hint {
+            font-size: 0.85rem;
+            color: #718096;
+        }
+
+        .uploaded-file {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            margin-top: 0.75rem;
+        }
+
+        .uploaded-file-icon {
+            font-size: 1.5rem;
+        }
+
+        .uploaded-file-info {
+            flex: 1;
+        }
+
+        .uploaded-file-name {
+            font-weight: 600;
+            color: #1a202c;
+            font-size: 0.9rem;
+        }
+
+        .uploaded-file-size {
+            font-size: 0.8rem;
+            color: #718096;
+        }
+
+        .remove-file-btn {
+            background: #feb2b2;
+            color: #742a2a;
+            border: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .remove-file-btn:hover {
+            background: #fc8181;
+        }
+
         @media (max-width: 768px) {
             .sidebar {
                 transform: translateX(-100%);
@@ -1089,10 +1280,18 @@
             <div class="modal-header">
                 <h2 class="modal-title" id="modalTitle"></h2>
             </div>
-            <div id="modalForm"></div>
+
+            <!-- Template Selection -->
+            <div id="templateSelection" class="template-selection"></div>
+
+            <!-- Form Container -->
+            <div id="formContainer" class="form-container">
+                <div id="modalForm"></div>
+            </div>
+
             <div class="modal-actions">
                 <button class="btn btn-secondary" onclick="closeModal()">キャンセル</button>
-                <button class="btn btn-primary" onclick="generateResult()">生成する</button>
+                <button class="btn btn-primary" id="generateBtn" onclick="generateResult()">生成する</button>
             </div>
             <div class="result-box" id="resultBox">
                 <h3>✨ 生成結果</h3>
@@ -1110,6 +1309,43 @@
                 category: 'sales-cs',
                 icon: '✉️',
                 description: '顧客への提案メールを自動生成。商品情報と顧客情報から最適な文面を作成します。',
+                templates: [
+                    {
+                        id: 'sales_email_1',
+                        title: '初回商談後の御礼メール',
+                        description: '商談後すぐに送る、感謝と次のステップを伝えるメール',
+                        example: '例：「本日はお時間をいただきありがとうございました。ご提案内容について...」',
+                        fields: [
+                            { name: 'customerName', label: '顧客名', type: 'text', placeholder: '株式会社〇〇', value: '' },
+                            { name: 'meetingDate', label: '商談日時', type: 'text', placeholder: '本日 / 〇月〇日', value: '本日' },
+                            { name: 'discussedTopics', label: '商談内容', type: 'textarea', placeholder: 'ご相談いただいた内容・課題', value: '' },
+                            { name: 'nextStep', label: '次のアクション', type: 'text', placeholder: '見積提出、デモ実施など', value: '' }
+                        ]
+                    },
+                    {
+                        id: 'sales_email_2',
+                        title: '提案書送付メール',
+                        description: '提案書や見積書を添付して送る正式な提案メール',
+                        example: '例：「先日ご相談いただいた件について、提案書をお送りいたします...」',
+                        fields: [
+                            { name: 'customerName', label: '顧客名', type: 'text', placeholder: '株式会社〇〇', value: '' },
+                            { name: 'proposalTitle', label: '提案内容', type: 'text', placeholder: '〇〇システム導入のご提案', value: '' },
+                            { name: 'keyPoints', label: '提案のポイント', type: 'textarea', placeholder: '提案の重要なポイント3つ', value: '' },
+                            { name: 'deadline', label: '回答期限', type: 'text', placeholder: '〇月〇日まで', value: '' }
+                        ]
+                    },
+                    {
+                        id: 'sales_email_3',
+                        title: 'フォローアップメール',
+                        description: '提案後、返答を促すための丁寧なフォローメール',
+                        example: '例：「先日お送りした提案書についてご確認いただけましたでしょうか...」',
+                        fields: [
+                            { name: 'customerName', label: '顧客名', type: 'text', placeholder: '株式会社〇〇', value: '' },
+                            { name: 'proposalSentDate', label: '提案送付日', type: 'text', placeholder: '〇月〇日', value: '' },
+                            { name: 'concernPoints', label: '懸念点への配慮', type: 'textarea', placeholder: 'ご検討にあたり気になる点など', value: '' }
+                        ]
+                    }
+                ],
                 fields: [
                     { name: 'customerName', label: '顧客名', type: 'text', placeholder: '株式会社〇〇' },
                     { name: 'product', label: '提案商品・サービス', type: 'text', placeholder: '商品名やサービス名' },
@@ -1122,6 +1358,39 @@
                 category: 'sales-cs',
                 icon: '📊',
                 description: '商談内容を分析し、SFAシステムへの入力データを自動生成します。',
+                templates: [
+                    {
+                        id: 'sfa_1',
+                        title: '今日の商談リストを一括入力',
+                        description: '1日分の商談をまとめてSFAに登録',
+                        example: '例：「本日3件の商談を実施。A社は提案段階、B社は見積提出...」',
+                        fields: [
+                            { name: 'meetingList', label: '商談リスト', type: 'textarea', placeholder: '商談内容を箇条書きまたは自由形式で入力', value: '' },
+                            { name: 'date', label: '商談日', type: 'text', placeholder: '本日 / 〇月〇日', value: '本日' }
+                        ]
+                    },
+                    {
+                        id: 'sfa_2',
+                        title: '重要商談の詳細記録',
+                        description: '大型案件など重要な商談を詳細に記録',
+                        example: '例：「〇〇社との新規システム導入案件。予算規模500万円...」',
+                        fields: [
+                            { name: 'customerName', label: '顧客名', type: 'text', placeholder: '株式会社〇〇', value: '' },
+                            { name: 'dealSize', label: '案件規模', type: 'text', placeholder: '予算・金額', value: '' },
+                            { name: 'meetingDetails', label: '商談詳細', type: 'textarea', placeholder: '議題、決定事項、次のアクション', value: '' },
+                            { name: 'probability', label: '受注確度', type: 'text', placeholder: '高 / 中 / 低', value: '' }
+                        ]
+                    },
+                    {
+                        id: 'sfa_3',
+                        title: 'クイック商談メモ',
+                        description: '簡易的な商談メモをSFA形式に変換',
+                        example: '例：「〇〇社、次回デモ希望、来週アポ調整」',
+                        fields: [
+                            { name: 'quickMemo', label: '商談メモ', type: 'textarea', placeholder: '自由形式でメモを入力', value: '' }
+                        ]
+                    }
+                ],
                 fields: [
                     { name: 'meeting', label: '商談内容', type: 'textarea', placeholder: '商談の内容を貼り付けてください' }
                 ]
@@ -1132,6 +1401,39 @@
                 category: 'sales-cs',
                 icon: '💬',
                 description: '顧客からの問い合わせに対する最適な回答案を生成します。',
+                templates: [
+                    {
+                        id: 'cs_1',
+                        title: 'クレーム対応メールの下書き',
+                        description: '誠実で丁寧なクレーム対応メールを作成',
+                        example: '例：「この度は大変ご迷惑をおかけし、誠に申し訳ございません...」',
+                        fields: [
+                            { name: 'customerName', label: '顧客名', type: 'text', placeholder: '〇〇様', value: '' },
+                            { name: 'issue', label: 'クレーム内容', type: 'textarea', placeholder: '発生した問題・不満', value: '' },
+                            { name: 'solution', label: '対応策', type: 'textarea', placeholder: '実施する対応・補償', value: '' }
+                        ]
+                    },
+                    {
+                        id: 'cs_2',
+                        title: '製品・サービスに関する質問回答',
+                        description: '機能や仕様についての問い合わせに回答',
+                        example: '例：「ご質問いただいた〇〇機能についてご説明いたします...」',
+                        fields: [
+                            { name: 'inquiry', label: '質問内容', type: 'textarea', placeholder: '顧客からの質問', value: '' },
+                            { name: 'productInfo', label: '製品情報', type: 'textarea', placeholder: '関連する機能・仕様', value: '' }
+                        ]
+                    },
+                    {
+                        id: 'cs_3',
+                        title: 'トラブルシューティング案内',
+                        description: '問題解決のための手順を案内',
+                        example: '例：「ご不便をおかけしております。以下の手順をお試しください...」',
+                        fields: [
+                            { name: 'problem', label: '発生している問題', type: 'textarea', placeholder: 'エラー内容や症状', value: '' },
+                            { name: 'steps', label: '解決手順', type: 'textarea', placeholder: '試してほしい対処法', value: '' }
+                        ]
+                    }
+                ],
                 fields: [
                     { name: 'inquiry', label: '問い合わせ内容', type: 'textarea', placeholder: '顧客からの問い合わせ' },
                     { name: 'context', label: '製品・サービス情報', type: 'textarea', placeholder: '関連する製品情報' }
@@ -1166,6 +1468,54 @@
                 category: 'marketing',
                 icon: '📱',
                 description: 'Twitter、Facebook、InstagramなどのSNS投稿文を目的に応じて生成します。',
+                templates: [
+                    {
+                        id: 'sns_1',
+                        title: '新商品・サービス発表',
+                        description: '新商品のローンチを魅力的に告知',
+                        example: '例：「ついに登場！〇〇で毎日がもっと便利に✨」',
+                        fields: [
+                            { name: 'platform', label: 'プラットフォーム', type: 'text', placeholder: 'Twitter / Instagram / Facebook', value: 'Twitter' },
+                            { name: 'productName', label: '商品・サービス名', type: 'text', placeholder: '商品名', value: '' },
+                            { name: 'features', label: '主な特徴', type: 'textarea', placeholder: '商品の魅力ポイント3つ', value: '' },
+                            { name: 'cta', label: 'CTA', type: 'text', placeholder: '詳細はこちら / 今すぐチェック', value: '詳細はこちら' }
+                        ]
+                    },
+                    {
+                        id: 'sns_2',
+                        title: 'キャンペーン告知',
+                        description: 'セールやキャンペーンでエンゲージメントを促進',
+                        example: '例：「🎉期間限定！今だけ30%OFF」',
+                        fields: [
+                            { name: 'platform', label: 'プラットフォーム', type: 'text', placeholder: 'Twitter / Instagram / Facebook', value: 'Instagram' },
+                            { name: 'campaignName', label: 'キャンペーン名', type: 'text', placeholder: '〇〇セール', value: '' },
+                            { name: 'benefit', label: '特典内容', type: 'text', placeholder: '割引率、プレゼントなど', value: '' },
+                            { name: 'period', label: '期間', type: 'text', placeholder: '〇月〇日まで', value: '' }
+                        ]
+                    },
+                    {
+                        id: 'sns_3',
+                        title: 'お客様の声・事例紹介',
+                        description: 'レビューや導入事例で信頼性をアピール',
+                        example: '例：「導入企業様から嬉しいお声をいただきました！」',
+                        fields: [
+                            { name: 'platform', label: 'プラットフォーム', type: 'text', placeholder: 'Twitter / Instagram / Facebook', value: 'Facebook' },
+                            { name: 'customerType', label: '顧客属性', type: 'text', placeholder: '企業、個人など', value: '' },
+                            { name: 'testimonial', label: 'お客様の声', type: 'textarea', placeholder: 'レビュー内容', value: '' }
+                        ]
+                    },
+                    {
+                        id: 'sns_4',
+                        title: 'お役立ち情報・Tips',
+                        description: '価値ある情報提供でフォロワーとの関係構築',
+                        example: '例：「知ってた？〇〇を効率化する3つのコツ📝」',
+                        fields: [
+                            { name: 'platform', label: 'プラットフォーム', type: 'text', placeholder: 'Twitter / Instagram / Facebook', value: 'Twitter' },
+                            { name: 'topic', label: 'トピック', type: 'text', placeholder: '業務効率化、時短術など', value: '' },
+                            { name: 'tips', label: 'Tips内容', type: 'textarea', placeholder: '3〜5つのポイント', value: '' }
+                        ]
+                    }
+                ],
                 fields: [
                     { name: 'platform', label: 'プラットフォーム', type: 'text', placeholder: 'Twitter / Instagram / Facebook' },
                     { name: 'topic', label: '投稿テーマ', type: 'text', placeholder: '新商品発売、キャンペーン告知など' },
@@ -1225,9 +1575,42 @@
                 category: 'backoffice-hr',
                 icon: '📄',
                 description: '契約書のチェックポイントを整理し、リスク分析を行います。',
+                templates: [
+                    {
+                        id: 'contract_1',
+                        title: '業務委託契約書のチェック',
+                        description: '業務委託契約の重要ポイントを確認',
+                        example: '例：「業務範囲、報酬、秘密保持などの条項を確認」',
+                        fields: [
+                            { name: 'contractFile', label: '契約書ファイル', type: 'file', placeholder: 'PDF, Word形式', value: '' },
+                            { name: 'checkPoints', label: '特に確認したい点', type: 'textarea', placeholder: '懸念事項や重点確認項目', value: '' }
+                        ]
+                    },
+                    {
+                        id: 'contract_2',
+                        title: '秘密保持契約（NDA）のレビュー',
+                        description: 'NDAの妥当性と抜け漏れをチェック',
+                        example: '例：「秘密情報の範囲、有効期間、違反時の対応を確認」',
+                        fields: [
+                            { name: 'contractFile', label: '契約書ファイル', type: 'file', placeholder: 'PDF, Word形式', value: '' },
+                            { name: 'purpose', label: '契約の目的', type: 'text', placeholder: '新規取引、共同開発など', value: '' }
+                        ]
+                    },
+                    {
+                        id: 'contract_3',
+                        title: '雇用契約書のチェック',
+                        description: '雇用条件の適切性を確認',
+                        example: '例：「労働条件、就業規則、福利厚生を確認」',
+                        fields: [
+                            { name: 'contractFile', label: '契約書ファイル', type: 'file', placeholder: 'PDF, Word形式', value: '' },
+                            { name: 'position', label: '職種・役職', type: 'text', placeholder: '正社員、契約社員など', value: '' }
+                        ]
+                    }
+                ],
                 fields: [
+                    { name: 'contractFile', label: '契約書ファイル', type: 'file', placeholder: 'PDF, Word形式' },
                     { name: 'contractType', label: '契約種別', type: 'text', placeholder: '業務委託、秘密保持契約など' },
-                    { name: 'content', label: '契約書内容', type: 'textarea', placeholder: '契約書の主要条項' }
+                    { name: 'content', label: '契約書内容（テキスト）', type: 'textarea', placeholder: '契約書の主要条項' }
                 ]
             },
             {
@@ -1257,8 +1640,41 @@
                 category: 'backoffice-hr',
                 icon: '📊',
                 description: '社員アンケートの結果を分析し、インサイトを抽出します。',
+                templates: [
+                    {
+                        id: 'survey_1',
+                        title: '従業員満足度調査の分析',
+                        description: 'エンゲージメントや満足度を定量・定性分析',
+                        example: '例：「全体的な満足度スコアと改善ポイントを抽出」',
+                        fields: [
+                            { name: 'surveyFile', label: 'アンケートデータ', type: 'file', placeholder: 'CSV, Excel形式', value: '' },
+                            { name: 'focusArea', label: '重点分析項目', type: 'textarea', placeholder: '特に知りたい項目や部門', value: '' }
+                        ]
+                    },
+                    {
+                        id: 'survey_2',
+                        title: '自由記述コメントの感情分析',
+                        description: 'テキストからポジティブ/ネガティブを判定',
+                        example: '例：「社員の本音や懸念事項を抽出」',
+                        fields: [
+                            { name: 'surveyFile', label: 'アンケートデータ', type: 'file', placeholder: 'CSV, Excel, TXT形式', value: '' },
+                            { name: 'question', label: '対象設問', type: 'text', placeholder: '分析したい設問', value: '' }
+                        ]
+                    },
+                    {
+                        id: 'survey_3',
+                        title: '部門別比較レポート',
+                        description: '部門ごとの傾向を比較分析',
+                        example: '例：「営業部とエンジニア部で満足度を比較」',
+                        fields: [
+                            { name: 'surveyFile', label: 'アンケートデータ', type: 'file', placeholder: 'CSV, Excel形式', value: '' },
+                            { name: 'departments', label: '比較する部門', type: 'text', placeholder: '営業部、エンジニア部など', value: '' }
+                        ]
+                    }
+                ],
                 fields: [
-                    { name: 'survey', label: 'アンケート結果', type: 'textarea', placeholder: 'アンケートの回答データ' }
+                    { name: 'surveyFile', label: 'アンケートデータファイル', type: 'file', placeholder: 'CSV, Excel形式' },
+                    { name: 'survey', label: 'アンケート結果（テキスト）', type: 'textarea', placeholder: 'アンケートの回答データ' }
                 ]
             },
 
@@ -1269,6 +1685,41 @@
                 category: 'common',
                 icon: '📝',
                 description: '会議の音声や記録から議事録を自動生成します。',
+                templates: [
+                    {
+                        id: 'meeting_1',
+                        title: '定例会議の議事録',
+                        description: '週次・月次の定例会議を構造化',
+                        example: '例：「前回のアクション確認、今週の報告、次週の予定」',
+                        fields: [
+                            { name: 'meetingType', label: '会議種別', type: 'text', placeholder: '週次MTG、月次報告会など', value: '' },
+                            { name: 'meetingNotes', label: '会議内容', type: 'textarea', placeholder: '議論された内容', value: '' },
+                            { name: 'participants', label: '参加者', type: 'text', placeholder: '参加者名', value: '' }
+                        ]
+                    },
+                    {
+                        id: 'meeting_2',
+                        title: 'プロジェクトMTGの議事録',
+                        description: 'プロジェクト進捗と課題を整理',
+                        example: '例：「進捗報告、課題、ネクストアクション」',
+                        fields: [
+                            { name: 'projectName', label: 'プロジェクト名', type: 'text', placeholder: 'プロジェクト名', value: '' },
+                            { name: 'meetingNotes', label: '会議内容', type: 'textarea', placeholder: '進捗、課題、決定事項', value: '' },
+                            { name: 'participants', label: '参加者', type: 'text', placeholder: '参加者名', value: '' }
+                        ]
+                    },
+                    {
+                        id: 'meeting_3',
+                        title: '1on1ミーティングの記録',
+                        description: 'マネージャーとメンバーの1on1を記録',
+                        example: '例：「現状の課題、サポートが必要な点、目標設定」',
+                        fields: [
+                            { name: 'memberName', label: 'メンバー名', type: 'text', placeholder: 'メンバー名', value: '' },
+                            { name: 'meetingNotes', label: '面談内容', type: 'textarea', placeholder: '話し合った内容', value: '' },
+                            { name: 'actions', label: 'アクションアイテム', type: 'textarea', placeholder: '次回までのアクション', value: '' }
+                        ]
+                    }
+                ],
                 fields: [
                     { name: 'meetingNotes', label: '会議メモ', type: 'textarea', placeholder: '会議の内容やポイント' },
                     { name: 'participants', label: '参加者', type: 'text', placeholder: '参加者名' }
@@ -1479,13 +1930,93 @@
             });
         }
 
+        let selectedTemplate = null;
+
         function openTool(toolId) {
             selectedTool = tools.find(t => t.id === toolId);
             if (!selectedTool) return;
 
+            selectedTemplate = null;
             document.getElementById('modalTitle').textContent = selectedTool.name;
+            document.getElementById('resultBox').classList.remove('active');
 
-            const formHtml = selectedTool.fields.map(field => {
+            // Show template selection if templates exist
+            if (selectedTool.templates && selectedTool.templates.length > 0) {
+                renderTemplateSelection();
+                document.getElementById('formContainer').classList.remove('active');
+            } else {
+                // No templates, show form directly
+                document.getElementById('templateSelection').innerHTML = '';
+                renderForm(selectedTool.fields);
+                document.getElementById('formContainer').classList.add('active');
+            }
+
+            document.getElementById('toolModal').classList.add('active');
+        }
+
+        function renderTemplateSelection() {
+            const templateHtml = `
+                <div class="template-section-title">テンプレートを選択してください</div>
+                <div class="template-grid">
+                    ${selectedTool.templates.map(template => `
+                        <div class="template-card" onclick="selectTemplate('${template.id}')">
+                            <div class="template-title">${template.title}</div>
+                            <div class="template-description">${template.description}</div>
+                            <div class="template-example">${template.example}</div>
+                        </div>
+                    `).join('')}
+                </div>
+                <a class="custom-template-link" onclick="useCustomTemplate()">カスタムで作成する（テンプレートなし）</a>
+            `;
+            document.getElementById('templateSelection').innerHTML = templateHtml;
+        }
+
+        function selectTemplate(templateId) {
+            selectedTemplate = selectedTool.templates.find(t => t.id === templateId);
+            if (!selectedTemplate) return;
+
+            // Update visual selection
+            document.querySelectorAll('.template-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            event.target.closest('.template-card').classList.add('selected');
+
+            // Show form with template fields
+            renderForm(selectedTemplate.fields);
+            document.getElementById('formContainer').classList.add('active');
+        }
+
+        function useCustomTemplate() {
+            selectedTemplate = null;
+            renderForm(selectedTool.fields);
+            document.getElementById('formContainer').classList.add('active');
+        }
+
+        let uploadedFiles = [];
+
+        function renderForm(fields) {
+            const formHtml = fields.map(field => {
+                if (field.type === 'file') {
+                    return `
+                        <div class="input-group">
+                            <label>${field.label}</label>
+                            <div class="file-upload-area" id="fileUpload_${field.name}"
+                                 onclick="document.getElementById('fileInput_${field.name}').click()"
+                                 ondrop="handleFileDrop(event, '${field.name}')"
+                                 ondragover="handleDragOver(event)"
+                                 ondragleave="handleDragLeave(event)">
+                                <div class="file-upload-icon">📁</div>
+                                <div class="file-upload-text">ファイルをドラッグ＆ドロップ</div>
+                                <div class="file-upload-hint">または クリックしてファイルを選択</div>
+                                <div class="file-upload-hint" style="margin-top: 0.5rem;">${field.placeholder || '対応形式: PDF, Word, Excel, CSV, TXT'}</div>
+                            </div>
+                            <input type="file" id="fileInput_${field.name}" style="display: none"
+                                   onchange="handleFileSelect(event, '${field.name}')"
+                                   accept=".pdf,.doc,.docx,.xls,.xlsx,.csv,.txt">
+                            <div id="uploadedFiles_${field.name}"></div>
+                        </div>
+                    `;
+                }
                 if (field.type === 'select') {
                     return `
                         <div class="input-group">
@@ -1500,16 +2031,63 @@
                     <div class="input-group">
                         <label>${field.label}</label>
                         ${field.type === 'textarea'
-                            ? `<textarea id="${field.name}" placeholder="${field.placeholder}"></textarea>`
-                            : `<input type="${field.type}" id="${field.name}" placeholder="${field.placeholder}">`
+                            ? `<textarea id="${field.name}" placeholder="${field.placeholder}">${field.value || ''}</textarea>`
+                            : `<input type="${field.type}" id="${field.name}" placeholder="${field.placeholder}" value="${field.value || ''}">`
                         }
                     </div>
                 `;
             }).join('');
 
             document.getElementById('modalForm').innerHTML = formHtml || '<p style="color: #718096;">このツールは設定不要です。</p>';
-            document.getElementById('resultBox').classList.remove('active');
-            document.getElementById('toolModal').classList.add('active');
+        }
+
+        function handleFileSelect(event, fieldName) {
+            const files = event.target.files;
+            if (files.length > 0) {
+                addUploadedFile(files[0], fieldName);
+            }
+        }
+
+        function handleFileDrop(event, fieldName) {
+            event.preventDefault();
+            event.stopPropagation();
+            event.target.closest('.file-upload-area').classList.remove('dragover');
+
+            const files = event.dataTransfer.files;
+            if (files.length > 0) {
+                addUploadedFile(files[0], fieldName);
+            }
+        }
+
+        function handleDragOver(event) {
+            event.preventDefault();
+            event.target.closest('.file-upload-area').classList.add('dragover');
+        }
+
+        function handleDragLeave(event) {
+            event.target.closest('.file-upload-area').classList.remove('dragover');
+        }
+
+        function addUploadedFile(file, fieldName) {
+            uploadedFiles.push({ file, fieldName });
+
+            const fileSize = (file.size / 1024).toFixed(2);
+            const fileHtml = `
+                <div class="uploaded-file">
+                    <div class="uploaded-file-icon">📄</div>
+                    <div class="uploaded-file-info">
+                        <div class="uploaded-file-name">${file.name}</div>
+                        <div class="uploaded-file-size">${fileSize} KB</div>
+                    </div>
+                    <button class="remove-file-btn" onclick="removeUploadedFile('${fieldName}')">削除</button>
+                </div>
+            `;
+            document.getElementById(`uploadedFiles_${fieldName}`).innerHTML = fileHtml;
+        }
+
+        function removeUploadedFile(fieldName) {
+            uploadedFiles = uploadedFiles.filter(f => f.fieldName !== fieldName);
+            document.getElementById(`uploadedFiles_${fieldName}`).innerHTML = '';
         }
 
         function openToolById(toolId) {
@@ -1524,8 +2102,10 @@
         function generateResult() {
             if (!selectedTool) return;
 
+            // Get form data from current fields
+            const currentFields = selectedTemplate ? selectedTemplate.fields : selectedTool.fields;
             const formData = {};
-            selectedTool.fields.forEach(field => {
+            currentFields.forEach(field => {
                 const element = document.getElementById(field.name);
                 if (element) {
                     formData[field.name] = element.value;
@@ -1534,10 +2114,70 @@
 
             let result = '';
 
-            // Generate mock results based on tool
+            // Generate mock results based on tool and template
             switch(selectedTool.id) {
                 case 1: // 提案メール
-                    result = `件名: ${formData.product}のご提案
+                    if (selectedTemplate) {
+                        if (selectedTemplate.id === 'sales_email_1') {
+                            // 初回商談後の御礼メール
+                            result = `件名: ${formData.meetingDate}の商談の御礼
+
+${formData.customerName} 御中
+
+いつもお世話になっております。
+
+${formData.meetingDate}は貴重なお時間をいただき、誠にありがとうございました。
+
+【ご相談内容】
+${formData.discussedTopics}
+
+貴社の課題解決に向けて、弊社の経験とソリューションを活かしてサポートさせていただきたく存じます。
+
+【次のステップ】
+${formData.nextStep}
+
+引き続き、どうぞよろしくお願いいたします。`;
+                        } else if (selectedTemplate.id === 'sales_email_2') {
+                            // 提案書送付メール
+                            result = `件名: ${formData.proposalTitle}
+
+${formData.customerName} 御中
+
+いつもお世話になっております。
+
+先日ご相談いただいた件につきまして、提案書を作成いたしましたのでお送りいたします。
+
+【提案のポイント】
+${formData.keyPoints}
+
+ご確認いただき、ご不明点やご質問等ございましたら、お気軽にお申し付けください。
+
+【回答期限】
+${formData.deadline}
+
+何卒よろしくお願いいたします。`;
+                        } else if (selectedTemplate.id === 'sales_email_3') {
+                            // フォローアップメール
+                            result = `件名: ${formData.proposalSentDate}ご送付の件（フォローアップ）
+
+${formData.customerName} 御中
+
+いつもお世話になっております。
+
+${formData.proposalSentDate}にお送りした提案書についてご確認いただけましたでしょうか。
+
+${formData.concernPoints ? `
+ご検討にあたり、以下の点についてもご参考になれば幸いです：
+${formData.concernPoints}
+` : ''}
+
+ご不明な点や追加でご説明が必要な事項がございましたら、いつでもお気軽にご連絡ください。
+
+引き続き、どうぞよろしくお願いいたします。`;
+                        }
+                    } else {
+                        // カスタム（従来の形式）
+                        result = `件名: ${formData.product}のご提案
 
 ${formData.customerName} 御中
 
@@ -1551,6 +2191,7 @@ ${formData.points}
 導入実績も多数ございますので、ぜひ一度、詳細をご説明させていただければと存じます。
 
 ご都合の良い日時をお知らせいただけますと幸いです。`;
+                    }
                     break;
 
                 case 2: // 商談記録分析
