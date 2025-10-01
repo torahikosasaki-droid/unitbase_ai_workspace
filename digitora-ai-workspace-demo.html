@@ -1,0 +1,1734 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>デジトラ AI Work Space - AIツールボックス</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f5f7fa;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .app-container {
+            display: flex;
+            height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: linear-gradient(180deg, #2d3748 0%, #1a202c 100%);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            z-index: 100;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo {
+            font-size: 1.3rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-icon {
+            font-size: 1.5rem;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 1rem 0;
+        }
+
+        .nav-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .nav-section-title {
+            padding: 0.5rem 1.5rem;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: 600;
+        }
+
+        .nav-item {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: rgba(255, 255, 255, 0.8);
+            border-left: 3px solid transparent;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .nav-item.active {
+            background: rgba(102, 126, 234, 0.2);
+            border-left-color: #667eea;
+            color: white;
+        }
+
+        .nav-item-icon {
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        .nav-item-text {
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header {
+            background: white;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1a202c;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .content-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 2rem;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Dashboard */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #718096;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1a202c;
+        }
+
+        .stat-icon {
+            float: right;
+            font-size: 2rem;
+            opacity: 0.3;
+        }
+
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: #1a202c;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .tool-card {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border-color: #667eea;
+        }
+
+        .tool-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+        }
+
+        .tool-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #1a202c;
+        }
+
+        .tool-description {
+            color: #718096;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .recommended-tools {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .recommended-tool {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #f7fafc;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .recommended-tool:hover {
+            background: #edf2f7;
+            transform: translateX(4px);
+        }
+
+        .btn {
+            padding: 0.6rem 1.5rem;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            padding: 2.5rem;
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: #f0f0f0;
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: #e0e0e0;
+            transform: rotate(90deg);
+        }
+
+        .modal-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #1a202c;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .input-group input,
+        .input-group textarea,
+        .input-group select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .input-group input:focus,
+        .input-group textarea:focus,
+        .input-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .input-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .modal-actions .btn {
+            flex: 1;
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+
+        .btn-secondary:hover {
+            background: #cbd5e0;
+        }
+
+        .result-box {
+            background: linear-gradient(135deg, #667eea10 0%, #764ba210 100%);
+            border: 2px solid #667eea30;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            display: none;
+        }
+
+        .result-box.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .result-box h3 {
+            color: #764ba2;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .result-text {
+            color: #333;
+            line-height: 1.6;
+            white-space: pre-wrap;
+        }
+
+        /* Tool Dictionary Styles */
+        .dictionary-category-tabs {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .dict-tab {
+            padding: 0.6rem 1.2rem;
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #4a5568;
+            transition: all 0.3s ease;
+        }
+
+        .dict-tab:hover {
+            border-color: #667eea;
+            color: #667eea;
+        }
+
+        .dict-tab.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-color: transparent;
+            color: white;
+        }
+
+        .dictionary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.2rem;
+        }
+
+        .dict-tool-card {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dict-tool-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .dict-tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+            border-color: #667eea;
+        }
+
+        .dict-tool-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .dict-tool-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .dict-tool-logo {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+            background: linear-gradient(135deg, #f0f4ff 0%, #e8f0ff 100%);
+        }
+
+        .dict-tool-info {
+            flex: 1;
+        }
+
+        .dict-tool-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 0.3rem;
+        }
+
+        .dict-tool-category {
+            font-size: 0.75rem;
+            color: #667eea;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .dict-tool-description {
+            color: #718096;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .dict-tool-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .dict-tool-tag {
+            padding: 0.3rem 0.7rem;
+            background: #f7fafc;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            color: #4a5568;
+            border: 1px solid #e2e8f0;
+        }
+
+        .dict-tool-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            margin-top: 1rem;
+            color: #667eea;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .dict-tool-link:hover {
+            color: #764ba2;
+        }
+
+        /* AI Secretary Styles */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .ai-secretary-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 16px;
+            padding: 2rem;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ai-secretary-card::before {
+            content: '🤖';
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            font-size: 120px;
+            opacity: 0.1;
+        }
+
+        .ai-secretary-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .ai-secretary-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+        }
+
+        .ai-secretary-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .ai-secretary-subtitle {
+            opacity: 0.9;
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .ai-message {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 1.2rem;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .ai-message-content {
+            line-height: 1.6;
+            margin-bottom: 0.8rem;
+        }
+
+        .ai-message-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .ai-quick-reply {
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .ai-quick-reply:hover {
+            background: rgba(255, 255, 255, 0.35);
+            transform: translateY(-2px);
+        }
+
+        .recurring-tasks-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .recurring-tasks-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .recurring-tasks-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1a202c;
+        }
+
+        .add-task-btn {
+            padding: 0.5rem 1rem;
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .add-task-btn:hover {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .recurring-task-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #f7fafc;
+            border-radius: 10px;
+            margin-bottom: 0.75rem;
+            transition: all 0.3s ease;
+        }
+
+        .recurring-task-item:hover {
+            background: #edf2f7;
+            transform: translateX(4px);
+        }
+
+        .task-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+
+        .task-info {
+            flex: 1;
+        }
+
+        .task-name {
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 0.3rem;
+        }
+
+        .task-schedule {
+            font-size: 0.85rem;
+            color: #718096;
+        }
+
+        .task-status {
+            padding: 0.3rem 0.8rem;
+            background: #e6fffa;
+            color: #047857;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .task-status.pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+
+            .sidebar.mobile-open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .tools-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .dictionary-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .dictionary-category-tabs {
+                gap: 0.5rem;
+            }
+
+            .dict-tab {
+                font-size: 0.85rem;
+                padding: 0.5rem 1rem;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="logo-icon">🧰</span>
+                    <span>デジトラ AI Work Space</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-item active" data-page="dashboard">
+                        <span class="nav-item-icon">📊</span>
+                        <span class="nav-item-text">ダッシュボード</span>
+                    </div>
+                    <div class="nav-item" data-page="common">
+                        <span class="nav-item-icon">🔧</span>
+                        <span class="nav-item-text">共通ツール</span>
+                    </div>
+                    <div class="nav-item" data-page="tool-dictionary">
+                        <span class="nav-item-icon">🔮</span>
+                        <span class="nav-item-text">AI Navigator</span>
+                    </div>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">部署別ツール</div>
+                    <div class="nav-item" data-page="sales-cs">
+                        <span class="nav-item-icon">🤝</span>
+                        <span class="nav-item-text">セールス & CS</span>
+                    </div>
+                    <div class="nav-item" data-page="marketing">
+                        <span class="nav-item-icon">📢</span>
+                        <span class="nav-item-text">マーケティング</span>
+                    </div>
+                    <div class="nav-item" data-page="backoffice-hr">
+                        <span class="nav-item-icon">📄</span>
+                        <span class="nav-item-text">バックオフィス & HR</span>
+                    </div>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-item" data-page="settings">
+                        <span class="nav-item-icon">⚙️</span>
+                        <span class="nav-item-text">設定・管理</span>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="header">
+                <h1 class="header-title" id="pageTitle">ダッシュボード</h1>
+                <div class="header-actions">
+                    <div class="user-avatar">A</div>
+                </div>
+            </header>
+
+            <div class="content-area">
+                <!-- Dashboard Page -->
+                <div class="page active" id="dashboard">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <span class="stat-icon">📈</span>
+                            <div class="stat-label">今月の利用回数</div>
+                            <div class="stat-value">127</div>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-icon">⏱️</span>
+                            <div class="stat-label">削減時間</div>
+                            <div class="stat-value">42h</div>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-icon">🎯</span>
+                            <div class="stat-label">お気に入りツール</div>
+                            <div class="stat-value">8</div>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-icon">✨</span>
+                            <div class="stat-label">生成コンテンツ</div>
+                            <div class="stat-value">342</div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-grid">
+                        <!-- AI Secretary Card -->
+                        <div class="ai-secretary-card">
+                            <div class="ai-secretary-header">
+                                <div class="ai-secretary-icon">🤖</div>
+                                <div>
+                                    <div class="ai-secretary-title">AI秘書</div>
+                                </div>
+                            </div>
+                            <div class="ai-secretary-subtitle">定例タスクを自動化し、最適なタイミングでサポートします</div>
+
+                            <div class="ai-message" id="aiMessage">
+                                <div class="ai-message-content" id="aiMessageContent">
+                                    こんにちは！今週もお疲れ様です。そろそろ<strong>週次営業レポート</strong>の作成時間ですが、いかがでしょうか？<br>
+                                    今週のSFAデータを基に、私の方でドラフトを準備しておきましょうか？
+                                </div>
+                                <div class="ai-message-actions">
+                                    <button class="ai-quick-reply" onclick="handleAiReply('yes')">お願いします</button>
+                                    <button class="ai-quick-reply" onclick="handleAiReply('later')">後で</button>
+                                    <button class="ai-quick-reply" onclick="handleAiReply('skip')">今週はスキップ</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Recurring Tasks Card -->
+                        <div class="recurring-tasks-card">
+                            <div class="recurring-tasks-header">
+                                <h3 class="recurring-tasks-title">定例タスク</h3>
+                                <button class="add-task-btn" onclick="alert('タスク追加機能は開発中です')">+ 追加</button>
+                            </div>
+
+                            <div class="recurring-task-item">
+                                <div class="task-icon">📊</div>
+                                <div class="task-info">
+                                    <div class="task-name">週次営業レポート</div>
+                                    <div class="task-schedule">毎週金曜 16:00</div>
+                                </div>
+                                <span class="task-status pending">今日</span>
+                            </div>
+
+                            <div class="recurring-task-item">
+                                <div class="task-icon">💰</div>
+                                <div class="task-info">
+                                    <div class="task-name">月次経費精算</div>
+                                    <div class="task-schedule">毎月末日 17:00</div>
+                                </div>
+                                <span class="task-status">設定済み</span>
+                            </div>
+
+                            <div class="recurring-task-item">
+                                <div class="task-icon">📧</div>
+                                <div class="task-info">
+                                    <div class="task-name">顧客フォローメール</div>
+                                    <div class="task-schedule">毎週月曜 10:00</div>
+                                </div>
+                                <span class="task-status">設定済み</span>
+                            </div>
+
+                            <div class="recurring-task-item">
+                                <div class="task-icon">📝</div>
+                                <div class="task-info">
+                                    <div class="task-name">議事録作成リマインド</div>
+                                    <div class="task-schedule">会議後 30分</div>
+                                </div>
+                                <span class="task-status">設定済み</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h2 class="section-title">あなたにおすすめのツール</h2>
+                        <div class="recommended-tools">
+                            <div class="recommended-tool" onclick="openToolById(1)">
+                                <div class="tool-icon">✉️</div>
+                                <div>
+                                    <div class="tool-title">提案メール生成</div>
+                                    <div class="tool-description">最近よく使われています</div>
+                                </div>
+                            </div>
+                            <div class="recommended-tool" onclick="openToolById(4)">
+                                <div class="tool-icon">📱</div>
+                                <div>
+                                    <div class="tool-title">SNS投稿文作成</div>
+                                    <div class="tool-description">マーケティング部門で人気</div>
+                                </div>
+                            </div>
+                            <div class="recommended-tool" onclick="openToolById(19)">
+                                <div class="tool-icon">📝</div>
+                                <div>
+                                    <div class="tool-title">会議議事録生成</div>
+                                    <div class="tool-description">全社で活用中</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sales & CS Page -->
+                <div class="page" id="sales-cs">
+                    <div class="section">
+                        <h2 class="section-title">セールス & カスタマーサクセス</h2>
+                        <div class="tools-grid" id="salesCsTools"></div>
+                    </div>
+                </div>
+
+                <!-- Marketing Page -->
+                <div class="page" id="marketing">
+                    <div class="section">
+                        <h2 class="section-title">マーケティング</h2>
+                        <div class="tools-grid" id="marketingTools"></div>
+                    </div>
+                </div>
+
+                <!-- Backoffice & HR Page -->
+                <div class="page" id="backoffice-hr">
+                    <div class="section">
+                        <h2 class="section-title">バックオフィス & HR</h2>
+                        <div class="tools-grid" id="backofficeHrTools"></div>
+                    </div>
+                </div>
+
+                <!-- Common Tools Page -->
+                <div class="page" id="common">
+                    <div class="section">
+                        <h2 class="section-title">共通ツール</h2>
+                        <div class="tools-grid" id="commonTools"></div>
+                    </div>
+                </div>
+
+                <!-- Tool Dictionary Page -->
+                <div class="page" id="tool-dictionary">
+                    <div class="section">
+                        <p style="color: #718096; margin-bottom: 1.5rem;">目的別にAIツールを探せる辞書機能。やりたいことから最適なツールを見つけましょう。</p>
+
+                        <div class="dictionary-category-tabs">
+                            <button class="dict-tab active" data-category="all">すべて</button>
+                            <button class="dict-tab" data-category="text">テキスト生成</button>
+                            <button class="dict-tab" data-category="image">画像生成・編集</button>
+                            <button class="dict-tab" data-category="video">動画制作</button>
+                            <button class="dict-tab" data-category="audio">音声・音楽</button>
+                            <button class="dict-tab" data-category="code">コード生成</button>
+                            <button class="dict-tab" data-category="data">データ分析</button>
+                            <button class="dict-tab" data-category="productivity">業務効率化</button>
+                        </div>
+
+                        <div class="dictionary-grid" id="dictionaryGrid"></div>
+                    </div>
+                </div>
+
+                <!-- Settings Page -->
+                <div class="page" id="settings">
+                    <div class="section">
+                        <h2 class="section-title">データ連携</h2>
+                        <div class="tools-grid" id="settingsIntegrations"></div>
+                    </div>
+                    <div class="section">
+                        <h2 class="section-title">アカウント管理</h2>
+                        <div class="tools-grid" id="settingsAccount"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="toolModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">×</button>
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle"></h2>
+            </div>
+            <div id="modalForm"></div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeModal()">キャンセル</button>
+                <button class="btn btn-primary" onclick="generateResult()">生成する</button>
+            </div>
+            <div class="result-box" id="resultBox">
+                <h3>✨ 生成結果</h3>
+                <div class="result-text" id="resultText"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const tools = [
+            // Sales & CS
+            {
+                id: 1,
+                name: '提案メール生成',
+                category: 'sales-cs',
+                icon: '✉️',
+                description: '顧客への提案メールを自動生成。商品情報と顧客情報から最適な文面を作成します。',
+                fields: [
+                    { name: 'customerName', label: '顧客名', type: 'text', placeholder: '株式会社〇〇' },
+                    { name: 'product', label: '提案商品・サービス', type: 'text', placeholder: '商品名やサービス名' },
+                    { name: 'points', label: '訴求ポイント', type: 'textarea', placeholder: '商品の特徴や強み' }
+                ]
+            },
+            {
+                id: 2,
+                name: '商談記録の分析・SFA自動入力',
+                category: 'sales-cs',
+                icon: '📊',
+                description: '商談内容を分析し、SFAシステムへの入力データを自動生成します。',
+                fields: [
+                    { name: 'meeting', label: '商談内容', type: 'textarea', placeholder: '商談の内容を貼り付けてください' }
+                ]
+            },
+            {
+                id: 3,
+                name: '顧客問い合わせへの回答案生成',
+                category: 'sales-cs',
+                icon: '💬',
+                description: '顧客からの問い合わせに対する最適な回答案を生成します。',
+                fields: [
+                    { name: 'inquiry', label: '問い合わせ内容', type: 'textarea', placeholder: '顧客からの問い合わせ' },
+                    { name: 'context', label: '製品・サービス情報', type: 'textarea', placeholder: '関連する製品情報' }
+                ]
+            },
+            {
+                id: 11,
+                name: 'アップセル/クロスセル機会の検知',
+                category: 'sales-cs',
+                icon: '📈',
+                description: '顧客データから追加提案の機会を検知し、提案内容を生成します。',
+                fields: [
+                    { name: 'customerData', label: '顧客情報', type: 'textarea', placeholder: '利用状況、契約内容など' }
+                ]
+            },
+            {
+                id: 12,
+                name: '失注要因分析レポート',
+                category: 'sales-cs',
+                icon: '📉',
+                description: '失注案件を分析し、改善点をレポート化します。',
+                fields: [
+                    { name: 'dealInfo', label: '案件情報', type: 'textarea', placeholder: '失注した案件の詳細' },
+                    { name: 'reason', label: '失注理由', type: 'textarea', placeholder: '失注の理由や背景' }
+                ]
+            },
+
+            // Marketing
+            {
+                id: 4,
+                name: 'SNS投稿文作成',
+                category: 'marketing',
+                icon: '📱',
+                description: 'Twitter、Facebook、InstagramなどのSNS投稿文を目的に応じて生成します。',
+                fields: [
+                    { name: 'platform', label: 'プラットフォーム', type: 'text', placeholder: 'Twitter / Instagram / Facebook' },
+                    { name: 'topic', label: '投稿テーマ', type: 'text', placeholder: '新商品発売、キャンペーン告知など' },
+                    { name: 'tone', label: 'トーン', type: 'text', placeholder: 'フレンドリー / フォーマル / カジュアル' }
+                ]
+            },
+            {
+                id: 5,
+                name: 'ブログ記事構成案',
+                category: 'marketing',
+                icon: '📰',
+                description: 'SEOを意識したブログ記事の構成案を自動生成します。',
+                fields: [
+                    { name: 'keyword', label: 'ターゲットキーワード', type: 'text', placeholder: 'SEO対策したいキーワード' },
+                    { name: 'audience', label: 'ターゲット読者', type: 'text', placeholder: '想定読者層' }
+                ]
+            },
+            {
+                id: 6,
+                name: '広告コピー & 画像生成',
+                category: 'marketing',
+                icon: '🎨',
+                description: '魅力的な広告コピーとビジュアル案を生成します。',
+                fields: [
+                    { name: 'product', label: '商品・サービス', type: 'text', placeholder: '宣伝する商品' },
+                    { name: 'target', label: 'ターゲット層', type: 'text', placeholder: '想定するターゲット' },
+                    { name: 'objective', label: '広告目的', type: 'text', placeholder: '認知拡大、購入促進など' }
+                ]
+            },
+            {
+                id: 13,
+                name: '競合・市場リサーチレポート',
+                category: 'marketing',
+                icon: '🔍',
+                description: '競合分析と市場調査のレポートを作成します。',
+                fields: [
+                    { name: 'industry', label: '業界・市場', type: 'text', placeholder: '調査対象の業界' },
+                    { name: 'competitors', label: '競合企業', type: 'textarea', placeholder: '競合企業名と特徴' }
+                ]
+            },
+            {
+                id: 14,
+                name: 'SEO記事構成案の作成',
+                category: 'marketing',
+                icon: '🔎',
+                description: '検索上位を狙うための記事構成を提案します。',
+                fields: [
+                    { name: 'keyword', label: 'キーワード', type: 'text', placeholder: 'ターゲットキーワード' },
+                    { name: 'searchIntent', label: '検索意図', type: 'textarea', placeholder: 'ユーザーの検索意図' }
+                ]
+            },
+
+            // Backoffice & HR
+            {
+                id: 7,
+                name: '契約書・法務文書レビュー',
+                category: 'backoffice-hr',
+                icon: '📄',
+                description: '契約書のチェックポイントを整理し、リスク分析を行います。',
+                fields: [
+                    { name: 'contractType', label: '契約種別', type: 'text', placeholder: '業務委託、秘密保持契約など' },
+                    { name: 'content', label: '契約書内容', type: 'textarea', placeholder: '契約書の主要条項' }
+                ]
+            },
+            {
+                id: 8,
+                name: '社内ナレッジ検索 (AI社内Wiki)',
+                category: 'backoffice-hr',
+                icon: '📚',
+                description: '社内の情報やナレッジを検索し、関連情報を提示します。',
+                fields: [
+                    { name: 'query', label: '検索キーワード', type: 'text', placeholder: '知りたい情報' }
+                ]
+            },
+            {
+                id: 9,
+                name: '採用候補者のスクリーニング',
+                category: 'backoffice-hr',
+                icon: '👥',
+                description: '応募者の履歴書・職務経歴書から適性を分析します。',
+                fields: [
+                    { name: 'position', label: '募集職種', type: 'text', placeholder: 'エンジニア、営業など' },
+                    { name: 'resume', label: '候補者情報', type: 'textarea', placeholder: '履歴書・職務経歴書の内容' }
+                ]
+            },
+            {
+                id: 10,
+                name: '社員アンケートの感情・内容分析',
+                category: 'backoffice-hr',
+                icon: '📊',
+                description: '社員アンケートの結果を分析し、インサイトを抽出します。',
+                fields: [
+                    { name: 'survey', label: 'アンケート結果', type: 'textarea', placeholder: 'アンケートの回答データ' }
+                ]
+            },
+
+            // Common Tools
+            {
+                id: 19,
+                name: '会議議事録生成',
+                category: 'common',
+                icon: '📝',
+                description: '会議の音声や記録から議事録を自動生成します。',
+                fields: [
+                    { name: 'meetingNotes', label: '会議メモ', type: 'textarea', placeholder: '会議の内容やポイント' },
+                    { name: 'participants', label: '参加者', type: 'text', placeholder: '参加者名' }
+                ]
+            },
+            {
+                id: 20,
+                name: 'ToDoリスト管理',
+                category: 'common',
+                icon: '✅',
+                description: '会議やメモからタスクを抽出し、優先順位をつけて整理します。',
+                fields: [
+                    { name: 'content', label: 'タスク元の情報', type: 'textarea', placeholder: '会議内容やメモ' }
+                ]
+            },
+            {
+                id: 21,
+                name: '企画書作成',
+                category: 'common',
+                icon: '📋',
+                description: 'ビジネス企画書のドラフトを作成します。',
+                fields: [
+                    { name: 'title', label: '企画タイトル', type: 'text', placeholder: '企画名' },
+                    { name: 'objective', label: '企画目的', type: 'textarea', placeholder: '企画の目的と背景' },
+                    { name: 'details', label: '企画内容', type: 'textarea', placeholder: '具体的な内容や施策' }
+                ]
+            },
+            {
+                id: 22,
+                name: 'プレスリリース作成',
+                category: 'common',
+                icon: '📰',
+                description: 'メディア向けのプレスリリースを作成します。',
+                fields: [
+                    { name: 'news', label: 'ニュース内容', type: 'textarea', placeholder: '発表する内容' },
+                    { name: 'company', label: '企業情報', type: 'text', placeholder: '会社名' }
+                ]
+            },
+            {
+                id: 23,
+                name: 'Webサイト・PDF要約',
+                category: 'common',
+                icon: '📄',
+                description: 'Webページやドキュメントを要約します。',
+                fields: [
+                    { name: 'url', label: 'URL or テキスト', type: 'textarea', placeholder: 'URLまたは要約したいテキスト' }
+                ]
+            },
+
+            // Settings
+            {
+                id: 15,
+                name: 'CRM連携設定',
+                category: 'settings',
+                icon: '🔗',
+                description: 'Salesforce、HubSpotなどのCRMとの連携を設定します。',
+                fields: [
+                    { name: 'crm', label: 'CRMシステム', type: 'select', options: ['Salesforce', 'HubSpot', 'Zoho CRM'] }
+                ]
+            },
+            {
+                id: 16,
+                name: 'Google Drive連携',
+                category: 'settings',
+                icon: '📁',
+                description: 'Google Driveとの連携でドキュメント管理を効率化します。',
+                fields: []
+            },
+            {
+                id: 17,
+                name: 'Slack連携',
+                category: 'settings',
+                icon: '💬',
+                description: 'Slackに通知を送信したり、コマンドで操作できます。',
+                fields: []
+            },
+            {
+                id: 18,
+                name: 'アカウント設定',
+                category: 'settings',
+                icon: '⚙️',
+                description: 'プロフィール、パスワード、通知設定を管理します。',
+                fields: []
+            }
+        ];
+
+        let selectedTool = null;
+        let currentDictCategory = 'all';
+
+        const pageTitles = {
+            'dashboard': 'ダッシュボード',
+            'sales-cs': 'セールス & CS',
+            'marketing': 'マーケティング',
+            'backoffice-hr': 'バックオフィス & HR',
+            'common': '共通ツール',
+            'tool-dictionary': 'AI Navigator',
+            'settings': '設定・管理'
+        };
+
+        const aiToolsDictionary = [
+            // Text Generation
+            { name: 'ChatGPT', category: 'text', icon: '🤖', description: '自然な会話形式でテキスト生成。ビジネス文書、メール、アイデア出しなど幅広く活用可能。', tags: ['文章作成', '対話', '多目的'], url: 'https://chat.openai.com' },
+            { name: 'Claude', category: 'text', icon: '🧠', description: '長文理解に強いAI。契約書分析、要約、複雑な質問への回答に最適。', tags: ['長文処理', '分析', '要約'], url: 'https://claude.ai' },
+            { name: 'Gemini', category: 'text', icon: '✨', description: 'Googleの多機能AI。検索連携やマルチモーダル対応で幅広いタスクに対応。', tags: ['多機能', '検索連携', 'Google'], url: 'https://gemini.google.com' },
+            { name: 'Notion AI', category: 'text', icon: '📝', description: 'Notion内で使えるAIアシスタント。議事録、タスク整理、ドキュメント作成を効率化。', tags: ['ドキュメント', 'タスク管理', 'Notion'], url: 'https://www.notion.so' },
+            { name: 'Jasper', category: 'text', icon: '✍️', description: 'マーケティングコンテンツに特化したAI。広告コピー、ブログ記事を効率的に生成。', tags: ['マーケティング', '広告', 'SEO'], url: 'https://www.jasper.ai' },
+            { name: 'Copy.ai', category: 'text', icon: '📄', description: 'SNS投稿、メール、商品説明文など短文コンテンツの生成に最適。', tags: ['短文', 'SNS', 'コピーライティング'], url: 'https://www.copy.ai' },
+
+            // Image Generation & Editing
+            { name: 'Midjourney', category: 'image', icon: '🎨', description: '芸術性の高い画像生成AI。プロンプトから美しいビジュアルを作成。', tags: ['アート', 'イラスト', '高品質'], url: 'https://www.midjourney.com' },
+            { name: 'DALL-E 3', category: 'image', icon: '🖼️', description: 'OpenAIの画像生成AI。テキストから正確で創造的な画像を生成。', tags: ['画像生成', 'OpenAI', '正確性'], url: 'https://openai.com/dall-e-3' },
+            { name: 'Stable Diffusion', category: 'image', icon: '🌟', description: 'オープンソースの画像生成AI。カスタマイズ性が高く、ローカル実行も可能。', tags: ['オープンソース', 'カスタマイズ', '自由度'], url: 'https://stability.ai' },
+            { name: 'Canva AI', category: 'image', icon: '🎭', description: 'デザインツールに統合されたAI。テンプレートから簡単にプロ品質のデザイン作成。', tags: ['デザイン', 'テンプレート', '簡単'], url: 'https://www.canva.com' },
+            { name: 'Adobe Firefly', category: 'image', icon: '🔥', description: 'Adobeの生成AI。商用利用可能で、Photoshopなどに統合。', tags: ['Adobe', '商用利用', 'プロ向け'], url: 'https://www.adobe.com/products/firefly.html' },
+            { name: 'Runway', category: 'image', icon: '🎬', description: '画像・動画編集のAI。背景除去、スタイル変換、拡張機能が充実。', tags: ['編集', 'クリエイティブ', '多機能'], url: 'https://runwayml.com' },
+
+            // Video Creation
+            { name: 'Runway Gen-2', category: 'video', icon: '🎥', description: 'テキストから動画を生成。短尺のクリエイティブ動画制作に。', tags: ['動画生成', 'AI動画', '短尺'], url: 'https://runwayml.com' },
+            { name: 'Synthesia', category: 'video', icon: '👤', description: 'AIアバターによる動画作成。研修動画、プレゼン動画を効率的に制作。', tags: ['アバター', '研修', 'プレゼン'], url: 'https://www.synthesia.io' },
+            { name: 'Pictory', category: 'video', icon: '📹', description: 'テキストから動画を自動生成。ブログ記事を動画コンテンツに変換。', tags: ['記事→動画', '自動化', 'SNS'], url: 'https://pictory.ai' },
+            { name: 'Descript', category: 'video', icon: '🎞️', description: 'テキストベースの動画編集。文字起こし、編集、AI音声生成が統合。', tags: ['編集', '文字起こし', 'ポッドキャスト'], url: 'https://www.descript.com' },
+            { name: 'HeyGen', category: 'video', icon: '🎬', description: 'AIアバター動画作成。多言語対応でグローバル展開に便利。', tags: ['アバター', '多言語', 'ビジネス'], url: 'https://www.heygen.com' },
+
+            // Audio & Music
+            { name: 'ElevenLabs', category: 'audio', icon: '🎙️', description: '超リアルなAI音声生成。ナレーション、音声コンテンツ制作に最適。', tags: ['音声合成', 'ナレーション', '高品質'], url: 'https://elevenlabs.io' },
+            { name: 'Murf AI', category: 'audio', icon: '🔊', description: 'ビジネス向けAI音声。プレゼン、広告、e-learningのナレーション作成。', tags: ['ビジネス', 'ナレーション', 'プレゼン'], url: 'https://murf.ai' },
+            { name: 'Suno AI', category: 'audio', icon: '🎵', description: 'テキストから音楽を生成。BGM、ジングル制作が簡単に。', tags: ['音楽生成', 'BGM', 'AI作曲'], url: 'https://www.suno.ai' },
+            { name: 'Speechify', category: 'audio', icon: '📖', description: 'テキストを音声に変換。文書読み上げ、学習効率化に。', tags: ['読み上げ', '学習', 'アクセシビリティ'], url: 'https://speechify.com' },
+
+            // Code Generation
+            { name: 'GitHub Copilot', category: 'code', icon: '💻', description: 'コード補完AI。開発効率を大幅に向上させるプログラミング支援。', tags: ['コーディング', '補完', 'GitHub'], url: 'https://github.com/features/copilot' },
+            { name: 'Cursor', category: 'code', icon: '⌨️', description: 'AI統合エディタ。コード生成、編集、デバッグを対話的に実行。', tags: ['エディタ', 'AI統合', '開発'], url: 'https://cursor.sh' },
+            { name: 'Tabnine', category: 'code', icon: '🔧', description: 'AIコード補完ツール。プライバシー重視で企業利用に最適。', tags: ['補完', 'プライバシー', '企業向け'], url: 'https://www.tabnine.com' },
+            { name: 'Replit AI', category: 'code', icon: '🚀', description: 'ブラウザで完結する開発環境。AIがコード生成からデプロイまでサポート。', tags: ['開発環境', 'ブラウザ', '初心者向け'], url: 'https://replit.com' },
+            { name: 'Amazon CodeWhisperer', category: 'code', icon: '☁️', description: 'AWSに最適化されたコード生成AI。クラウド開発を効率化。', tags: ['AWS', 'クラウド', 'Amazon'], url: 'https://aws.amazon.com/codewhisperer/' },
+
+            // Data Analysis
+            { name: 'ChatGPT Advanced Data Analysis', category: 'data', icon: '📊', description: 'データ分析とグラフ作成。CSVアップロードで即座に分析・可視化。', tags: ['分析', 'グラフ', 'CSV'], url: 'https://chat.openai.com' },
+            { name: 'Julius AI', category: 'data', icon: '📈', description: 'データ分析に特化したAI。統計分析、予測モデル作成をサポート。', tags: ['統計', '予測', 'ビジネス'], url: 'https://julius.ai' },
+            { name: 'DataRobot', category: 'data', icon: '🤖', description: '機械学習プラットフォーム。ノーコードでAIモデル構築が可能。', tags: ['機械学習', 'ノーコード', '企業向け'], url: 'https://www.datarobot.com' },
+            { name: 'MonkeyLearn', category: 'data', icon: '🐵', description: 'テキストデータの分析AI。感情分析、分類、キーワード抽出に。', tags: ['テキスト分析', '感情分析', 'NLP'], url: 'https://monkeylearn.com' },
+
+            // Productivity
+            { name: 'Grammarly', category: 'productivity', icon: '✅', description: '英文校正AI。文法、スペル、トーンを自動チェック。', tags: ['英語', '校正', 'ライティング'], url: 'https://www.grammarly.com' },
+            { name: 'Otter.ai', category: 'productivity', icon: '🦦', description: '会議の自動文字起こし。リアルタイム書き起こしと要約生成。', tags: ['文字起こし', '会議', '議事録'], url: 'https://otter.ai' },
+            { name: 'Mem', category: 'productivity', icon: '🧠', description: 'AIナレッジベース。メモを自動整理し、関連情報を提案。', tags: ['ナレッジ管理', 'メモ', '整理'], url: 'https://mem.ai' },
+            { name: 'Zapier AI', category: 'productivity', icon: '⚡', description: '業務自動化プラットフォーム。AI機能で複雑なワークフロー構築。', tags: ['自動化', '連携', 'ワークフロー'], url: 'https://zapier.com' },
+            { name: 'Fireflies.ai', category: 'productivity', icon: '🎤', description: 'ミーティングアシスタント。録音、文字起こし、要約を自動化。', tags: ['会議', '自動化', 'チーム'], url: 'https://fireflies.ai' },
+            { name: 'Beautiful.ai', category: 'productivity', icon: '📊', description: 'AIプレゼンテーション作成。デザインを自動調整してプロ品質に。', tags: ['プレゼン', 'デザイン', 'スライド'], url: 'https://www.beautiful.ai' },
+            { name: 'Tome', category: 'productivity', icon: '📖', description: 'ストーリーテリング型プレゼン作成。AIが構成とデザインを提案。', tags: ['プレゼン', 'ストーリー', 'AI生成'], url: 'https://tome.app' }
+        ];
+
+        // Initialize
+        renderTools();
+        setupNavigation();
+        renderDictionary();
+        setupDictionaryTabs();
+
+        function renderTools() {
+            const categories = {
+                'sales-cs': document.getElementById('salesCsTools'),
+                'marketing': document.getElementById('marketingTools'),
+                'backoffice-hr': document.getElementById('backofficeHrTools'),
+                'common': document.getElementById('commonTools'),
+                'settings-integrations': document.getElementById('settingsIntegrations'),
+                'settings-account': document.getElementById('settingsAccount')
+            };
+
+            tools.forEach(tool => {
+                const toolCard = `
+                    <div class="tool-card" onclick="openTool(${tool.id})">
+                        <div class="tool-icon">${tool.icon}</div>
+                        <h3 class="tool-title">${tool.name}</h3>
+                        <p class="tool-description">${tool.description}</p>
+                    </div>
+                `;
+
+                if (tool.category === 'settings') {
+                    if (tool.id <= 17) {
+                        categories['settings-integrations'].innerHTML += toolCard;
+                    } else {
+                        categories['settings-account'].innerHTML += toolCard;
+                    }
+                } else if (categories[tool.category]) {
+                    categories[tool.category].innerHTML += toolCard;
+                }
+            });
+        }
+
+        function setupNavigation() {
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    const page = item.dataset.page;
+                    if (!page) return;
+
+                    // Update active nav item
+                    navItems.forEach(ni => ni.classList.remove('active'));
+                    item.classList.add('active');
+
+                    // Update page
+                    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+                    document.getElementById(page).classList.add('active');
+
+                    // Update title
+                    document.getElementById('pageTitle').textContent = pageTitles[page] || 'ページ';
+                });
+            });
+        }
+
+        function openTool(toolId) {
+            selectedTool = tools.find(t => t.id === toolId);
+            if (!selectedTool) return;
+
+            document.getElementById('modalTitle').textContent = selectedTool.name;
+
+            const formHtml = selectedTool.fields.map(field => {
+                if (field.type === 'select') {
+                    return `
+                        <div class="input-group">
+                            <label>${field.label}</label>
+                            <select id="${field.name}">
+                                ${field.options.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
+                            </select>
+                        </div>
+                    `;
+                }
+                return `
+                    <div class="input-group">
+                        <label>${field.label}</label>
+                        ${field.type === 'textarea'
+                            ? `<textarea id="${field.name}" placeholder="${field.placeholder}"></textarea>`
+                            : `<input type="${field.type}" id="${field.name}" placeholder="${field.placeholder}">`
+                        }
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('modalForm').innerHTML = formHtml || '<p style="color: #718096;">このツールは設定不要です。</p>';
+            document.getElementById('resultBox').classList.remove('active');
+            document.getElementById('toolModal').classList.add('active');
+        }
+
+        function openToolById(toolId) {
+            openTool(toolId);
+        }
+
+        function closeModal() {
+            document.getElementById('toolModal').classList.remove('active');
+            selectedTool = null;
+        }
+
+        function generateResult() {
+            if (!selectedTool) return;
+
+            const formData = {};
+            selectedTool.fields.forEach(field => {
+                const element = document.getElementById(field.name);
+                if (element) {
+                    formData[field.name] = element.value;
+                }
+            });
+
+            let result = '';
+
+            // Generate mock results based on tool
+            switch(selectedTool.id) {
+                case 1: // 提案メール
+                    result = `件名: ${formData.product}のご提案
+
+${formData.customerName} 御中
+
+いつもお世話になっております。
+
+この度は、貴社の業務効率化に最適な${formData.product}をご提案させていただきたく、ご連絡いたしました。
+
+【${formData.product}の特徴】
+${formData.points}
+
+導入実績も多数ございますので、ぜひ一度、詳細をご説明させていただければと存じます。
+
+ご都合の良い日時をお知らせいただけますと幸いです。`;
+                    break;
+
+                case 2: // 商談記録分析
+                    result = `【商談分析サマリー】
+
+■ 商談フェーズ: 提案段階
+■ 確度: 60%
+■ 次回アクション: 見積書提出
+■ 競合状況: 2社と比較検討中
+
+【SFA自動入力データ】
+- 案件名: [顧客名]_業務効率化ツール導入
+- 受注予定日: 2ヶ月後
+- 予算: 要確認
+- キーマン: [担当者名]`;
+                    break;
+
+                case 4: // SNS投稿
+                    result = `【${formData.platform}投稿文】
+
+${formData.topic}について投稿します！✨
+
+${formData.tone}なトーンで、フォロワーの皆さんに価値を届けます。
+
+いいね・シェアお待ちしております！
+
+#${formData.topic.replace(/\s/g, '')} #ビジネス #DX`;
+                    break;
+
+                case 19: // 会議議事録
+                    result = `【会議議事録】
+
+日時: ${new Date().toLocaleDateString()}
+参加者: ${formData.participants}
+
+■ 議題
+${formData.meetingNotes}
+
+■ 決定事項
+- [自動抽出された決定事項]
+
+■ アクションアイテム
+- [ ] タスク1 (担当: XX)
+- [ ] タスク2 (担当: YY)
+
+■ 次回会議
+日時: 未定`;
+                    break;
+
+                case 21: // 企画書
+                    result = `【企画書: ${formData.title}】
+
+■ 企画概要
+${formData.objective}
+
+■ 企画内容
+${formData.details}
+
+■ 期待効果
+- ビジネス成果の向上
+- 業務効率の改善
+- 顧客満足度の向上
+
+■ 実行計画
+1. フェーズ1: 準備・計画
+2. フェーズ2: 実行・展開
+3. フェーズ3: 効果測定・改善`;
+                    break;
+
+                default:
+                    result = `【${selectedTool.name} - 生成結果】
+
+入力いただいた情報を基に、AIが最適な内容を生成しました。
+
+${Object.entries(formData).map(([key, value]) => value ? `・ ${value}` : '').filter(v => v).join('\n')}
+
+この内容をベースに、さらにカスタマイズしてご利用ください。`;
+            }
+
+            document.getElementById('resultText').textContent = result;
+            document.getElementById('resultBox').classList.add('active');
+        }
+
+        // Dictionary functions
+        function renderDictionary() {
+            const grid = document.getElementById('dictionaryGrid');
+            const filteredTools = currentDictCategory === 'all'
+                ? aiToolsDictionary
+                : aiToolsDictionary.filter(tool => tool.category === currentDictCategory);
+
+            grid.innerHTML = filteredTools.map(tool => `
+                <div class="dict-tool-card" onclick="window.open('${tool.url}', '_blank')">
+                    <div class="dict-tool-header">
+                        <div class="dict-tool-logo">${tool.icon}</div>
+                        <div class="dict-tool-info">
+                            <div class="dict-tool-name">${tool.name}</div>
+                            <div class="dict-tool-category">${getCategoryName(tool.category)}</div>
+                        </div>
+                    </div>
+                    <div class="dict-tool-description">${tool.description}</div>
+                    <div class="dict-tool-tags">
+                        ${tool.tags.map(tag => `<span class="dict-tool-tag">${tag}</span>`).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getCategoryName(category) {
+            const names = {
+                'text': 'テキスト生成',
+                'image': '画像生成・編集',
+                'video': '動画制作',
+                'audio': '音声・音楽',
+                'code': 'コード生成',
+                'data': 'データ分析',
+                'productivity': '業務効率化'
+            };
+            return names[category] || category;
+        }
+
+        function setupDictionaryTabs() {
+            const tabs = document.querySelectorAll('.dict-tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    currentDictCategory = tab.dataset.category;
+                    renderDictionary();
+                });
+            });
+        }
+
+        // AI Secretary functions
+        function handleAiReply(action) {
+            const messageContent = document.getElementById('aiMessageContent');
+            const messageActions = document.querySelector('.ai-message-actions');
+
+            if (action === 'yes') {
+                messageContent.innerHTML = `
+                    かしこまりました！5分ほどでドラフトをまとめ、チャットでお送りしますね。<br><br>
+                    <strong>📊 レポート作成中...</strong><br>
+                    <div style="margin-top: 0.5rem; font-size: 0.9rem; opacity: 0.9;">
+                    ✓ SFAデータ取得完了<br>
+                    ✓ 商談分析実行中...<br>
+                    ✓ グラフ生成準備中...
+                    </div>
+                `;
+                messageActions.innerHTML = '';
+
+                setTimeout(() => {
+                    messageContent.innerHTML = `
+                        ✅ <strong>週次営業レポート</strong>のドラフトが完成しました！<br><br>
+                        主な内容:<br>
+                        • 今週の商談: 15件 (先週比 +3件)<br>
+                        • 受注見込み: 5件 (金額: 450万円)<br>
+                        • 要フォロー案件: 3件<br><br>
+                        レポートをダウンロードしますか？
+                    `;
+                    messageActions.innerHTML = `
+                        <button class="ai-quick-reply" onclick="alert('ダウンロード機能は開発中です')">ダウンロード</button>
+                        <button class="ai-quick-reply" onclick="alert('編集機能は開発中です')">編集する</button>
+                    `;
+                }, 3000);
+            } else if (action === 'later') {
+                messageContent.innerHTML = '承知しました。1時間後に再度リマインドいたしますね。';
+                messageActions.innerHTML = '';
+            } else if (action === 'skip') {
+                messageContent.innerHTML = '了解しました。今週のレポートはスキップします。来週また声をかけますね。';
+                messageActions.innerHTML = '';
+            }
+        }
+
+        // Close modal on background click
+        document.getElementById('toolModal').addEventListener('click', (e) => {
+            if (e.target.id === 'toolModal') {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
