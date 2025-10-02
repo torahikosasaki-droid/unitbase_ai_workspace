@@ -1228,6 +1228,15 @@
                 <div class="page" id="favorites">
                     <div class="section">
                         <h2 class="section-title">お気に入りツール</h2>
+
+                        <div class="dictionary-category-tabs">
+                            <button class="dict-tab active" data-fav-category="all">すべて</button>
+                            <button class="dict-tab" data-fav-category="common">全社共通</button>
+                            <button class="dict-tab" data-fav-category="sales-cs">セールス & CS</button>
+                            <button class="dict-tab" data-fav-category="marketing">マーケティング</button>
+                            <button class="dict-tab" data-fav-category="backoffice-hr">バックオフィス & HR</button>
+                        </div>
+
                         <div class="tools-grid" id="favoritesTools"></div>
                     </div>
                 </div>
@@ -1901,6 +1910,7 @@
 
         // Favorites management
         let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+        let currentFavCategory = 'all';
 
         function toggleFavorite(toolId, event) {
             event.stopPropagation();
@@ -1919,7 +1929,7 @@
             return favorites.includes(toolId);
         }
 
-        function renderFavorites() {
+        function renderFavorites(filterCategory = 'all') {
             const favoritesContainer = document.getElementById('favoritesTools');
             if (!favoritesContainer) return;
 
@@ -1930,7 +1940,20 @@
                 return;
             }
 
-            favorites.forEach(favId => {
+            let filteredFavorites = favorites;
+            if (filterCategory !== 'all') {
+                filteredFavorites = favorites.filter(favId => {
+                    const tool = tools.find(t => t.id === favId);
+                    return tool && tool.category === filterCategory;
+                });
+            }
+
+            if (filteredFavorites.length === 0) {
+                favoritesContainer.innerHTML = '<p style="color: #718096; text-align: center; padding: 2rem;">このカテゴリにお気に入りはありません。</p>';
+                return;
+            }
+
+            filteredFavorites.forEach(favId => {
                 const tool = tools.find(t => t.id === favId);
                 if (tool) {
                     const toolCard = `
@@ -1946,12 +1969,25 @@
             });
         }
 
+        function setupFavoritesTabs() {
+            const favTabs = document.querySelectorAll('[data-fav-category]');
+            favTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    favTabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    currentFavCategory = tab.dataset.favCategory;
+                    renderFavorites(currentFavCategory);
+                });
+            });
+        }
+
         // Initialize
         renderTools();
         setupNavigation();
         renderDictionary();
         setupDictionaryTabs();
         renderFavorites();
+        setupFavoritesTabs();
 
         function renderTools() {
             const categories = {
