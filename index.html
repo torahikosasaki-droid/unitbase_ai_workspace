@@ -1963,6 +1963,11 @@
                 'settings-account': document.getElementById('settingsAccount')
             };
 
+            // Clear existing content first
+            Object.values(categories).forEach(cat => {
+                if (cat) cat.innerHTML = '';
+            });
+
             tools.forEach(tool => {
                 const isFav = isFavorite(tool.id);
                 const toolCard = `
