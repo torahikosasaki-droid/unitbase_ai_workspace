@@ -522,6 +522,285 @@
             gap: 1.2rem;
         }
 
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .portfolio-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .portfolio-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .portfolio-thumbnail {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .portfolio-thumbnail::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .portfolio-card:hover .portfolio-thumbnail::after {
+            opacity: 1;
+        }
+
+        .portfolio-content {
+            padding: 1.5rem;
+        }
+
+        .portfolio-category {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: #f0f4ff;
+            color: #667eea;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.75rem;
+        }
+
+        .portfolio-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 0.75rem;
+            line-height: 1.4;
+        }
+
+        .portfolio-description {
+            color: #718096;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .portfolio-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .portfolio-tag {
+            padding: 0.35rem 0.75rem;
+            background: #edf2f7;
+            color: #4a5568;
+            font-size: 0.8rem;
+            border-radius: 6px;
+        }
+
+        .portfolio-detail-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .portfolio-detail-modal.active {
+            display: flex;
+        }
+
+        .portfolio-detail-content {
+            background: white;
+            border-radius: 20px;
+            max-width: 900px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .portfolio-detail-header {
+            position: relative;
+            height: 300px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+        }
+
+        .portfolio-close-btn {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .portfolio-close-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+
+        .portfolio-detail-body {
+            padding: 2.5rem;
+        }
+
+        .portfolio-detail-category {
+            display: inline-block;
+            padding: 0.4rem 1rem;
+            background: #f0f4ff;
+            color: #667eea;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 1rem;
+        }
+
+        .portfolio-detail-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #1a202c;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+
+        .portfolio-detail-description {
+            color: #4a5568;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 2rem;
+        }
+
+        .portfolio-detail-section {
+            margin-bottom: 2rem;
+        }
+
+        .portfolio-detail-section h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .portfolio-detail-section ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .portfolio-detail-section li {
+            padding: 0.75rem 0;
+            color: #4a5568;
+            line-height: 1.6;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        .portfolio-detail-section li::before {
+            content: '✓';
+            color: #667eea;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .portfolio-cta-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-top: 2.5rem;
+            text-align: center;
+            color: white;
+        }
+
+        .portfolio-cta-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+
+        .portfolio-cta-text {
+            font-size: 1rem;
+            opacity: 0.95;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .portfolio-cta-button {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: white;
+            color: #667eea;
+            font-weight: 700;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+        }
+
+        .portfolio-cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .portfolio-tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .tech-badge {
+            padding: 0.5rem 1rem;
+            background: #f0f4ff;
+            color: #667eea;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border-radius: 8px;
+        }
+
         .dict-tool-card {
             background: white;
             border: 2px solid #e2e8f0;
@@ -1068,6 +1347,10 @@
                         <span class="nav-item-icon">🔮</span>
                         <span class="nav-item-text">AI Tool Navigator</span>
                     </div>
+                    <div class="nav-item" data-page="portfolio">
+                        <span class="nav-item-icon">💼</span>
+                        <span class="nav-item-text">開発実績</span>
+                    </div>
                 </div>
 
                 <div class="nav-section">
@@ -1293,6 +1576,14 @@
                     </div>
                 </div>
 
+                <!-- Portfolio Page -->
+                <div class="page" id="portfolio">
+                    <div class="section">
+                        <p style="color: #718096; margin-bottom: 1.5rem;">弊社がこれまでに開発したAI業務効率化ツールの実績をご紹介します。</p>
+                        <div class="portfolio-grid" id="portfolioGrid"></div>
+                    </div>
+                </div>
+
                 <!-- Settings Page -->
                 <div class="page" id="settings">
                     <div class="section">
@@ -1331,6 +1622,17 @@
             <div class="result-box" id="resultBox">
                 <h3>✨ 生成結果</h3>
                 <div class="result-text" id="resultText"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Portfolio Detail Modal -->
+    <div class="portfolio-detail-modal" id="portfolioModal">
+        <div class="portfolio-detail-content">
+            <div class="portfolio-detail-header" id="portfolioModalHeader">
+                <button class="portfolio-close-btn" onclick="closePortfolioModal()">×</button>
+            </div>
+            <div class="portfolio-detail-body" id="portfolioModalBody">
             </div>
         </div>
     </div>
@@ -1844,6 +2146,165 @@
         let selectedTool = null;
         let currentDictCategory = 'all';
 
+        const portfolioProjects = [
+            {
+                id: 1,
+                title: 'AI営業レポート自動作成ツール',
+                category: 'セールス & CS',
+                icon: '📊',
+                description: 'SFAデータを解析し、週次・月次営業レポートを自動生成。作成時間を90%削減。',
+                fullDescription: 'Salesforceから営業データを自動取得し、AIが成約率や商談進捗を分析。マネージャー向けレポートを数クリックで生成します。',
+                challenges: [
+                    '週次レポート作成に平均3時間かかっていた',
+                    '複数のSFAからデータを手動でまとめる必要があった',
+                    '分析の観点が担当者によってバラバラだった'
+                ],
+                solutions: [
+                    'SFA APIとの自動連携で最新データを即座に取得',
+                    'AI分析エンジンで重要指標を自動抽出',
+                    'テンプレート機能で統一されたレポート形式を実現',
+                    'PowerPoint・Excel形式での出力に対応'
+                ],
+                results: [
+                    'レポート作成時間を平均3時間→15分に短縮（90%削減）',
+                    '全営業担当者の生産性が20%向上',
+                    'マネジメント判断のスピードが3倍に'
+                ],
+                techStack: ['OpenAI GPT-4', 'Salesforce API', 'Python', 'React'],
+                tags: ['営業効率化', 'レポート自動化', 'データ分析']
+            },
+            {
+                id: 2,
+                title: 'AI顧客メール返信支援システム',
+                category: 'カスタマーサポート',
+                icon: '📧',
+                description: '過去の対応履歴から最適な返信文を提案。カスタマーサポートの対応時間を60%短縮。',
+                fullDescription: '過去のメール対応データベースを学習し、問い合わせ内容に応じた返信案を自動生成。トーン調整や多言語対応も可能です。',
+                challenges: [
+                    'CS担当者の返信作成に1件あたり20分かかっていた',
+                    '担当者による返信品質のバラつきがあった',
+                    '英語・中国語対応に専門スタッフが必要だった'
+                ],
+                solutions: [
+                    '過去5万件の対応履歴をAI学習',
+                    '問い合わせカテゴリを自動判別し、適切な返信テンプレートを提案',
+                    '丁寧・カジュアルなどトーン調整機能',
+                    '8ヶ国語対応の自動翻訳機能を統合'
+                ],
+                results: [
+                    '平均返信時間が20分→8分に短縮（60%削減）',
+                    '顧客満足度スコアが15%向上',
+                    '多言語対応コストを70%削減'
+                ],
+                techStack: ['Claude API', 'Gmail API', 'Vue.js', 'Firebase'],
+                tags: ['CS効率化', 'メール自動化', '多言語対応']
+            },
+            {
+                id: 3,
+                title: 'マーケティングコンテンツ生成AI',
+                category: 'マーケティング',
+                icon: '✍️',
+                description: 'ブログ記事、SNS投稿、広告コピーをAIが自動生成。コンテンツ制作時間を75%削減。',
+                fullDescription: '商品情報とターゲット情報を入力するだけで、SEO最適化されたブログ記事や魅力的な広告コピーを自動生成します。',
+                challenges: [
+                    '1記事作成に5〜8時間かかっていた',
+                    'SEOキーワードの最適化が難しかった',
+                    'SNS用の複数バリエーション作成に時間がかかっていた'
+                ],
+                solutions: [
+                    'ターゲットペルソナに合わせたトーン生成',
+                    'SEOキーワード自動挿入・最適化',
+                    'ブログ、Twitter、Instagram、LinkedIn用に自動フォーマット変換',
+                    '競合分析データとの連携で差別化ポイントを強調'
+                ],
+                results: [
+                    'コンテンツ制作時間が平均6時間→1.5時間に（75%削減）',
+                    'SEO流入が3ヶ月で40%増加',
+                    'SNSエンゲージメント率が2倍に向上'
+                ],
+                techStack: ['GPT-4', 'SEMrush API', 'Next.js', 'MongoDB'],
+                tags: ['コンテンツ生成', 'SEO最適化', 'SNS運用']
+            },
+            {
+                id: 4,
+                title: 'AI契約書レビューシステム',
+                category: 'バックオフィス',
+                icon: '📑',
+                description: '契約書の自動チェックとリスク検出。法務チェック時間を80%削減。',
+                fullDescription: '契約書をアップロードすると、AIが条項をチェックし、リスク箇所やコンプライアンス違反を自動検出します。',
+                challenges: [
+                    '1契約あたり法務チェックに2〜3時間かかっていた',
+                    '見落としによる契約リスクがあった',
+                    '過去の契約パターンとの整合性チェックが困難だった'
+                ],
+                solutions: [
+                    'AI が契約書を自動解析し、リスク箇所をハイライト',
+                    '過去の自社契約パターンと比較し、異常な条項を検出',
+                    '業界標準条項データベースと照合',
+                    '修正提案と代替文案を自動生成'
+                ],
+                results: [
+                    '法務チェック時間が平均2.5時間→30分に（80%削減）',
+                    '契約リスク検出率が95%に向上',
+                    '法務担当者の業務負荷を50%軽減'
+                ],
+                techStack: ['Claude API', 'PDF.js', 'Angular', 'PostgreSQL'],
+                tags: ['法務効率化', 'リスク管理', '契約書分析']
+            },
+            {
+                id: 5,
+                title: 'AI人材マッチング・採用支援',
+                category: 'HR',
+                icon: '👥',
+                description: '応募者の履歴書を自動分析し、最適な候補者をスコアリング。採用プロセスを50%効率化。',
+                fullDescription: '求人票と応募者データを AI が分析し、適性スコアを算出。面接質問案の自動生成や、候補者への返信文作成も支援します。',
+                challenges: [
+                    '大量の応募書類のスクリーニングに膨大な時間がかかっていた',
+                    '面接官による評価基準のバラつきがあった',
+                    '候補者へのフォローアップメールに時間を取られていた'
+                ],
+                solutions: [
+                    '履歴書・職務経歴書を自動解析し、求人要件とのマッチ度をスコアリング',
+                    '候補者の経験・スキルに基づいた面接質問案を自動生成',
+                    '評価レポートと次ステップ提案を自動作成',
+                    '候補者へのフォローメールを自動生成'
+                ],
+                results: [
+                    '書類選考時間が70%短縮',
+                    '面接準備時間が1候補者あたり2時間→30分に',
+                    '採用決定までの期間が平均45日→25日に短縮'
+                ],
+                techStack: ['OpenAI API', 'NLP', 'Django', 'Redis'],
+                tags: ['採用効率化', '人材分析', 'HR-Tech']
+            },
+            {
+                id: 6,
+                title: '議事録自動作成AI',
+                category: '全社共通',
+                icon: '🎙️',
+                description: 'Web会議の音声を自動で文字起こしし、議事録を生成。会議後の作業時間を95%削減。',
+                fullDescription: 'Zoom、Teams、Google Meetの会議を自動で録音・文字起こしし、重要ポイントを抽出して議事録を作成します。',
+                challenges: [
+                    '会議後の議事録作成に1時間以上かかっていた',
+                    '担当者によって記録の粒度がバラバラだった',
+                    'アクションアイテムの漏れが発生していた'
+                ],
+                solutions: [
+                    'Web会議ツールと連携し、音声を自動録音・文字起こし',
+                    'AIが重要な発言やアクションアイテムを自動抽出',
+                    '話者識別機能で発言者を自動タグ付け',
+                    'Slack・Notionへの自動共有機能'
+                ],
+                results: [
+                    '議事録作成時間が平均60分→3分に（95%削減）',
+                    'アクションアイテムの漏れがゼロに',
+                    '会議の生産性が30%向上'
+                ],
+                techStack: ['Whisper API', 'GPT-4', 'Zoom API', 'Slack API'],
+                tags: ['会議効率化', '文字起こし', 'ナレッジ管理']
+            }
+        ];
+
         const pageTitles = {
             'dashboard': 'ダッシュボード',
             'favorites': 'お気に入り',
@@ -1852,6 +2313,7 @@
             'backoffice-hr': 'バックオフィス & HR',
             'common': '全社共通',
             'tool-dictionary': 'AI Tool Navigator',
+            'portfolio': '開発実績',
             'settings': '設定・管理'
         };
 
@@ -1988,6 +2450,7 @@
         setupDictionaryTabs();
         renderFavorites();
         setupFavoritesTabs();
+        renderPortfolio();
 
         function renderTools() {
             const categories = {
@@ -2415,6 +2878,105 @@ ${Object.entries(formData).map(([key, value]) => value ? `・ ${value}` : '').fi
                     </div>
                 </div>
             `).join('');
+        }
+
+        function renderPortfolio() {
+            const grid = document.getElementById('portfolioGrid');
+            grid.innerHTML = portfolioProjects.map(project => `
+                <div class="portfolio-card" onclick="openPortfolioDetail(${project.id})">
+                    <div class="portfolio-thumbnail" style="background: linear-gradient(135deg, ${getGradientColors(project.category)})">
+                        ${project.icon}
+                    </div>
+                    <div class="portfolio-content">
+                        <div class="portfolio-category">${project.category}</div>
+                        <h3 class="portfolio-title">${project.title}</h3>
+                        <p class="portfolio-description">${project.description}</p>
+                        <div class="portfolio-tags">
+                            ${project.tags.map(tag => `<span class="portfolio-tag">${tag}</span>`).join('')}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getGradientColors(category) {
+            const gradients = {
+                'セールス & CS': '#667eea 0%, #764ba2 100%',
+                'カスタマーサポート': '#f093fb 0%, #f5576c 100%',
+                'マーケティング': '#4facfe 0%, #00f2fe 100%',
+                'バックオフィス': '#43e97b 0%, #38f9d7 100%',
+                'HR': '#fa709a 0%, #fee140 100%',
+                '全社共通': '#30cfd0 0%, #330867 100%'
+            };
+            return gradients[category] || '#667eea 0%, #764ba2 100%';
+        }
+
+        function openPortfolioDetail(projectId) {
+            const project = portfolioProjects.find(p => p.id === projectId);
+            if (!project) return;
+
+            const modal = document.getElementById('portfolioModal');
+            const header = document.getElementById('portfolioModalHeader');
+            const body = document.getElementById('portfolioModalBody');
+
+            header.style.background = `linear-gradient(135deg, ${getGradientColors(project.category)})`;
+            header.innerHTML = `
+                <button class="portfolio-close-btn" onclick="closePortfolioModal()">×</button>
+                ${project.icon}
+            `;
+
+            body.innerHTML = `
+                <div class="portfolio-detail-category">${project.category}</div>
+                <h2 class="portfolio-detail-title">${project.title}</h2>
+                <p class="portfolio-detail-description">${project.fullDescription}</p>
+
+                <div class="portfolio-detail-section">
+                    <h3>🎯 導入前の課題</h3>
+                    <ul>
+                        ${project.challenges.map(challenge => `<li>${challenge}</li>`).join('')}
+                    </ul>
+                </div>
+
+                <div class="portfolio-detail-section">
+                    <h3>💡 ソリューション</h3>
+                    <ul>
+                        ${project.solutions.map(solution => `<li>${solution}</li>`).join('')}
+                    </ul>
+                </div>
+
+                <div class="portfolio-detail-section">
+                    <h3>📈 導入効果</h3>
+                    <ul>
+                        ${project.results.map(result => `<li>${result}</li>`).join('')}
+                    </ul>
+                </div>
+
+                <div class="portfolio-detail-section">
+                    <h3>🔧 使用技術</h3>
+                    <div class="portfolio-tech-stack">
+                        ${project.techStack.map(tech => `<span class="tech-badge">${tech}</span>`).join('')}
+                    </div>
+                </div>
+
+                <div class="portfolio-cta-section">
+                    <h3 class="portfolio-cta-title">同じような課題でお悩みですか?</h3>
+                    <p class="portfolio-cta-text">貴社の業務に合わせたAIツール開発をご提案いたします。<br>お気軽にお問い合わせください。</p>
+                    <button class="portfolio-cta-button" onclick="contactFromPortfolio('${project.title}')">
+                        💬 このツールについて問い合わせる
+                    </button>
+                </div>
+            `;
+
+            modal.classList.add('active');
+        }
+
+        function closePortfolioModal() {
+            document.getElementById('portfolioModal').classList.remove('active');
+        }
+
+        function contactFromPortfolio(projectTitle) {
+            alert(`「${projectTitle}」についてのお問い合わせを受け付けます。\n\n実際の実装では、問い合わせフォームへのリンクやメール送信機能に接続します。`);
+            // 実装例: window.location.href = `mailto:contact@company.com?subject=${encodeURIComponent(projectTitle + 'についてのお問い合わせ')}`;
         }
 
         function getCategoryName(category) {
